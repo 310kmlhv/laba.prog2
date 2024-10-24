@@ -4,7 +4,7 @@ from PySide6.QtGui import QAction
 
 # Функции конвертации для различных физических величин
 def convert_length(value, from_unit, to_unit):
-    length_units = {'meters': 1, 'kilometers': 1000, 'centimeters': 0.01, 'millimeters': 0.001}
+    length_units = {'meters': 1, 'kilometers': 0.001, 'centimeters': 100, 'millimeters': 1000}
     try:
         result = float(value) * (length_units[to_unit] / length_units[from_unit])
         return result
@@ -12,7 +12,7 @@ def convert_length(value, from_unit, to_unit):
         raise ValueError("Invalid units")
 
 def convert_mass(value, from_unit, to_unit):
-    mass_units = {'grams': 1, 'kilograms': 0.001, 'milligrams': 0.001}
+    mass_units = {'grams': 1, 'kilograms': 0.001, 'milligrams': 1000}
     try:
         result = float(value) * (mass_units[to_unit] / mass_units[from_unit])
         return result
