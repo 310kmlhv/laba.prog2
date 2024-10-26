@@ -2,7 +2,6 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, Q
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction
 
-# Функции конвертации для различных физических величин
 def convert_length(value, from_unit, to_unit):
     length_units = {'meters': 1, 'kilometers': 0.001, 'centimeters': 100, 'millimeters': 1000}
     try:
@@ -30,6 +29,16 @@ def convert_temperature(value, from_unit, to_unit):
             return value + 273.15
         elif from_unit == 'Kelvin' and to_unit == 'Celsius':
             return value - 273.15
+        elif from_unit == 'Fahrenheit' and to_unit == 'Kelvin':
+            return (value - 32) * 5/9 + 273.15
+        elif from_unit == 'Kelvin' and to_unit == 'Fahrenheit':
+            return (value - 273.15) * 9/5 + 32
+        elif from_unit == 'Celsius' and to_unit == 'Celsius':
+            return value  # Конвертация Цельсия в Цельсий
+        elif from_unit == 'Kelvin' and to_unit == 'Kelvin':
+            return value  # Конвертация Кельвина в Кельвины
+        elif from_unit == 'Fahrenheit' and to_unit == 'Fahrenheit':
+            return value  # Конвертация Фаренгейта в Фаренгейт
         else:
             raise ValueError("Invalid temperature conversion")
     except ValueError:
@@ -40,30 +49,25 @@ class UnitConverterApp(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Конвертер единиц")
-        self.setGeometry(300, 200, 400, 300)  # Устанавливаем начальный размер окна
+        self.setGeometry(300, 200, 400, 300)
 
-        # Главное меню
         menu_bar = self.menuBar()
         file_menu = menu_bar.addMenu("Меню")
         exit_action = QAction("Выход", self)
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
 
-        # Основной виджет
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
 
-        # Основной вертикальный layout
         layout = QVBoxLayout()
 
-        # Метка и поле для ввода значения
         self.label_value = QLabel("Введите значение:")
         layout.addWidget(self.label_value)
 
         self.entry_value = QLineEdit()
         layout.addWidget(self.entry_value)
 
-        # Метка и выпадающий список для единицы измерения (из)
         self.label_from = QLabel("Из единицы:")
         layout.addWidget(self.label_from)
 
@@ -71,7 +75,6 @@ class UnitConverterApp(QMainWindow):
         self.from_unit.addItems(["meters", "kilometers", "centimeters", "millimeters", "grams", "kilograms", "milligrams", "Celsius", "Fahrenheit", "Kelvin"])
         layout.addWidget(self.from_unit)
 
-        # Метка и выпадающий список для единицы измерения (в)
         self.label_to = QLabel("В единицу:")
         layout.addWidget(self.label_to)
 
@@ -79,16 +82,13 @@ class UnitConverterApp(QMainWindow):
         self.to_unit.addItems(["meters", "kilometers", "centimeters", "millimeters", "grams", "kilograms", "milligrams", "Celsius", "Fahrenheit", "Kelvin"])
         layout.addWidget(self.to_unit)
 
-        # Кнопка для конвертации
         self.convert_button = QPushButton("Конвертировать")
         self.convert_button.clicked.connect(self.convert)
         layout.addWidget(self.convert_button)
 
-        # Метка для вывода результата
         self.result_label = QLabel("")
         layout.addWidget(self.result_label)
 
-        # Устанавливаем layout в центральный виджет
         central_widget.setLayout(layout)
 
     def convert(self):
@@ -97,7 +97,6 @@ class UnitConverterApp(QMainWindow):
             from_unit = self.from_unit.currentText()
             to_unit = self.to_unit.currentText()
 
-            # Проверяем тип измерений (длина, масса, температура)
             if from_unit in ["meters", "kilometers", "centimeters", "millimeters"]:
                 result = convert_length(value, from_unit, to_unit)
             elif from_unit in ["grams", "kilograms", "milligrams"]:
@@ -110,7 +109,6 @@ class UnitConverterApp(QMainWindow):
         except ValueError as e:
             QMessageBox.critical(self, "Ошибка", f"Произошла ошибка: {e}")
 
-# Основная часть программы
 if __name__ == "__main__":
     app = QApplication([])
 
